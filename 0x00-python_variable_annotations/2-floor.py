@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-import math
+"""A function """
 
 
 def floor(n: float) -> str:
-    return math.floor(n)
+    """A function"""
+    return int(n)
