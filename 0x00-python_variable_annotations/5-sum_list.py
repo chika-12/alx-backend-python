@@ -6,4 +6,4 @@ from typing import List
 
 def sum_list(input_list: list[float]) -> float:
     """A function that returns the sum of a list of floats"""
-    return (sum(input_list))
+    return float(sum(input_list))
