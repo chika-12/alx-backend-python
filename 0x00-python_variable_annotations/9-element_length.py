@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """A function"""
 
-from typing import List, Tuple, Iterable
+import typing
 
 
-def element_length(lst: List[Iterable]) -> List[Tuple[Iterable, int]]:
-    """A function"""
+def element_length(lst: typing.Iterable[typing.Sequence]) -> \
+        typing.List[typing.Tuple[typing.Sequence, int]]:
+    """Returns a list of tuples"""
     return [(i, len(i)) for i in lst]
