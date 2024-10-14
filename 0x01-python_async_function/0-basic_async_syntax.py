@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""A function for writing asynchronous event"""
+
 import asyncio
 import random
 
