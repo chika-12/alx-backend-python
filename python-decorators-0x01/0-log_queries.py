@@ -1,5 +1,6 @@
 import sqlite3
 import functools
+from datetime import datetime  
 
 #### decorator to lof SQL queries
 
@@ -10,7 +11,9 @@ def log_queries(func):
       query = args[0]
     else:
       query = kwargs.get("query")
-    print(F"({query})")
+
+    timestamp = datetime.now()
+    print(f"[{timestamp}] ({query})")
     result = func(*args, **kwargs)
     return result
   return logger
