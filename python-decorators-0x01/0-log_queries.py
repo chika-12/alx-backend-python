@@ -10,7 +10,7 @@ def log_queries(func):
       query = args[0]
     else:
       query = kwargs.get("query")
-    print(F" users = {func.__name__}(query={query})")
+    print(F"({query})")
     result = func(*args, **kwargs)
     return result
   return logger
