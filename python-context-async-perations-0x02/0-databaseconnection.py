@@ -22,7 +22,7 @@ class Database:
 
 
 with Database("../python-generators-0x00/ALX_prodev") as cur:
-    cur.execute("SELECT * FROM user_data WHERE age = 15;")
+    cur.execute("SELECT * FROM users;")
     data = cur.fetchall()
     for val in data:
        #if val['age'] > 90:
