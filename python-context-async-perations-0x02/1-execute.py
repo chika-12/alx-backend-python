@@ -26,7 +26,7 @@ class Database:
             self.conn.rollback()
 
         self.conn.close()
-with Database(database_name, "SELECT * FROM users;") as data:
+with Database(database_name, "SELECT * FROM users WHERE age > 89;") as data:
     for row in data:
         print(dict(row))
 
