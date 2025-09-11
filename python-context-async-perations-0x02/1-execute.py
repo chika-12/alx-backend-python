@@ -5,7 +5,7 @@ import sqlite3
 
 database_name = "../python-generators-0x00/ALX_prodev"
 
-class Database:
+class ExecuteQuery:
     def __init__(self, db_name, query):
         self.db_name = db_name
         self.conn = None
@@ -26,7 +26,7 @@ class Database:
             self.conn.rollback()
 
         self.conn.close()
-with Database(database_name, "SELECT * FROM users WHERE age > 89;") as data:
+with ExecuteQuery(database_name, "SELECT * FROM users WHERE age > 89;") as data:
     for row in data:
         print(dict(row))
 
