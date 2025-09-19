@@ -3,12 +3,13 @@ import unittest
 from utils import *
 from typing import Mapping, Sequence, Any
 from parameterized import parameterized
+from unittest.mock import patch, Mock
 
 
 class TestAccessNestedMap(unittest.TestCase):
     """
-         MyClass is a demonstration class that shows how to use docstrings
-         for documenting Python code.
+        TestAccessNestedMap is a demonstration class that shows how test
+        cases for the access_nested_map works
     """
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
@@ -55,6 +56,25 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         with self.assertRaises(KeyError):
             access_nested_map(nested_map, path)
+
+
+class TestGetJson(unittest.TestCase):
+    """
+        Test for a new class get_json
+    """
+
+    @patch("utils.requests.get")
+    def test_get_json(self, mock_get):
+        """
+            Gets json from remote url
+        """
+        mock_response = Mock()
+        mock_response.json.return_value = {"key": "value"}
+        mock_get.return_value = mock_response
+        url = "example.com"
+        result = get_json(url)
+        self.assertEqual(result, {"key": "value"})
+        mock_get.assert_called_once_with(url)
 
 
 if __name__ == "__main__":
