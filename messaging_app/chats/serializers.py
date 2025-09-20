@@ -1,11 +1,24 @@
 from rest_framework import serializers
 from .models import User, Conversation, Message
 
+# -------------------------------
+# User Serializer
+# -------------------------------
 class UserSerializer(serializers.ModelSerializer):
+    role = serializers.CharField(max_length=10)
+
     class Meta:
         model = User
         fields = ['user_id', 'first_name', 'last_name', 'email', 'role']
 
+    def validate_role(self, value):
+        if value not in ['guest', 'host', 'admin']:
+            raise serializers.ValidationError("Role must be guest, host, or admin")
+        return value
+
+# -------------------------------
+# Message Serializer
+# -------------------------------
 class MessageSerializer(serializers.ModelSerializer):
     sender_name = serializers.SerializerMethodField()  # dynamic field
 
@@ -16,6 +29,9 @@ class MessageSerializer(serializers.ModelSerializer):
     def get_sender_name(self, obj):
         return f"{obj.sender.first_name} {obj.sender.last_name}"
 
+# -------------------------------
+# Conversation Serializer
+# -------------------------------
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True)
     messages = MessageSerializer(many=True, read_only=True)
