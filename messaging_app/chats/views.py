@@ -5,18 +5,18 @@ from .serializers import MessageSerializer, ConversationSerializer, UserSerializ
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .auth import CustomTokenPairSerializer
-from .permissions import IsOwnerOrParticipant
+from .permissions import IsParticipantOfConversation 
 
 
 class MessageViewSet(viewsets.ModelViewSet):
   queryset = Message.objects.all()
   serializer_class = MessageSerializer
-  permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
+  permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
 
 class ConversationViewSet(viewsets.ModelViewSet):
   queryset = Conversation.objects.all()
   serializer_class = ConversationSerializer
-  permission_classes = [IsAuthenticated, IsOwnerOrParticipant]
+  permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
