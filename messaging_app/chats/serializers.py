@@ -35,7 +35,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['message_id', 'sender', 'sender_name', 'message_body', 'sent_at']
+        fields = ['message_id', 'sender', 'sender_name', 'conversation', 'message_body', 'sent_at']
 
     def get_sender_name(self, obj):
         return f"{obj.sender.first_name} {obj.sender.last_name}"
@@ -44,7 +44,7 @@ class MessageSerializer(serializers.ModelSerializer):
 # Conversation Serializer
 # -------------------------------
 class ConversationSerializer(serializers.ModelSerializer):
-    participants = UserSerializer(many=True)
+    participants = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
     messages = MessageSerializer(many=True, read_only=True)
     total_messages = serializers.SerializerMethodField()
 
