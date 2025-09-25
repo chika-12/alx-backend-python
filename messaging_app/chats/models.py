@@ -18,9 +18,12 @@ class User(AbstractUser):
     ]
     role = models.CharField(max_length=5, choices=ROLE_CHOICES, default='guest')
     created_at = models.DateTimeField(auto_now_add=True)
-    password = models.CharField(max_length=50, null=False, blank=False, validators=[MinLengthValidator(8)])
-
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name',]
+    #password = models.CharField(max_length=50, null=False, blank=False, validators=[MinLengthValidator(8)])
+    email = models.CharField(null=False, blank=False, validators=[MinLengthValidator(8)], max_length=50, unique=True)
+    first_name = models.CharField(null=False, blank=False, max_length=20)
+    last_name = models.CharField(null=False, blank=False, max_length=20)
+    USERNAME_FIELD = "email" 
+    REQUIRED_FIELDS = ['username']
 
 # Conversation model
 class Conversation(models.Model):

@@ -6,6 +6,8 @@ from rest_framework import viewsets, status, filters
 from .models import Message, User, Conversation
 from .serializers import MessageSerializer, ConversationSerializer, UserSerializer
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.views import TokenObtainPairView
+from .auth import CustomTokenPairSerializer
 
 class MessageViewSet(viewsets.ModelViewSet):
   queryset = Message.objects.all()
@@ -22,3 +24,5 @@ class UserViewSet(viewsets.ModelViewSet):
   serializer_class = UserSerializer
   permission_classes = [AllowAny]
 
+class CustomTokenPairView(TokenObtainPairView):
+  serializer_class = CustomTokenPairSerializer

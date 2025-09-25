@@ -1,15 +1,26 @@
 from rest_framework import serializers
 from .models import User, Conversation, Message
 
+
 # -------------------------------
 # User Serializer
 # -------------------------------
 class UserSerializer(serializers.ModelSerializer):
-    role = serializers.CharField(max_length=10)
+    role = serializers.CharField(max_length=10, required=False)
 
     class Meta:
         model = User
-        fields = ['user_id', 'first_name', 'last_name', 'email', 'role']
+        fields = ['user_id', 'username', 'first_name', 'last_name', 'email', 'role', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+    
+    def create(self, validated_data):
+        password = validated_data.pop("password")
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
 
     def validate_role(self, value):
         if value not in ['guest', 'host', 'admin']:
@@ -43,3 +54,5 @@ class ConversationSerializer(serializers.ModelSerializer):
 
     def get_total_messages(self, obj):
         return obj.messages.count()
+
+
