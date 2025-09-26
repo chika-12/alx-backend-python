@@ -21,7 +21,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
   def get_queryset(self):
     conversation_id = self.kwargs.get('conversation_id')
-    return Message.objects.get(conversation_conversation_id=conversation_id)
+    return Message.objects.filter(conversation_conversation_id=conversation_id)
   
   def create(self, request, *args, **kwargs):
     conversation_id = self.kwargs.get('conversation_id')
