@@ -13,15 +13,20 @@ class MessageViewSet(viewsets.ModelViewSet):
   queryset = Message.objects.all()
   serializer_class = MessageSerializer
   permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
+  def get_queryset(self):
+    conversation_id = self.kwargs.get('conversation_id')
+    return Message.objects.filter(conversation_id=conversation_id, conversation__participants=self.request.user)
+    
 
 class ConversationViewSet(viewsets.ModelViewSet):
   queryset = Conversation.objects.all()
   serializer_class = ConversationSerializer
   permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
 
+
   def get_queryset(self):
     conversation_id = self.kwargs.get('conversation_id')
-    return Message.objects.filter(conversation_conversation_id=conversation_id)
+    return Message.objects.filter(conversation_id=conversation_id, conversation__participants=self.request.user)
   
   def create(self, request, *args, **kwargs):
     conversation_id = self.kwargs.get('conversation_id')
