@@ -5,7 +5,8 @@ from .serializers import MessageSerializer, ConversationSerializer, UserSerializ
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .auth import CustomTokenPairSerializer
-from .permissions import IsParticipantOfConversation 
+from .permissions import IsParticipantOfConversation
+from rest_framework.response import Response
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -17,6 +18,22 @@ class ConversationViewSet(viewsets.ModelViewSet):
   queryset = Conversation.objects.all()
   serializer_class = ConversationSerializer
   permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
+
+  def get_queryset(self):
+    conversation_id = self.kwargs.get('conversation_id')
+    return Message.objects.get(conversation_conversation_id=conversation_id)
+  
+  def create(self, request, *args, **kwargs):
+    conversation_id = self.kwargs.get('conversation_id')
+    conversation = Conversation.objects.get('conversation_id=conversation_id')
+
+    if request.user not in conversation.participants.all():
+      return Response({"detail": "Forbidedn"}, status=status.HTTP_403_FORBIDDEN)
+    serializer = self.get_serializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    serializer.save(sender=request.user, conversation=conversation)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+  
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
