@@ -28,7 +28,4 @@ urlpatterns = [
     path('api-auth/', include('chats.urls')),
     path("api/login/", CustomTokenPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh")
-
-
-
 ]

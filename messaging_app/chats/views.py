@@ -7,6 +7,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .auth import CustomTokenPairSerializer
 from .permissions import IsParticipantOfConversation
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -15,7 +16,7 @@ class MessageViewSet(viewsets.ModelViewSet):
   permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
   def get_queryset(self):
     conversation_id = self.kwargs.get('conversation_id')
-    return Message.objects.filter(conversation_id=conversation_id, conversation__participants=self.request.user)
+    return Message.objects.filter(conversation__participants=self.request.user)
     
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -44,6 +45,32 @@ class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
   permission_classes = [IsAuthenticated]
+
+  def get_permissions(self):
+    if self.action == 'create':
+      return [AllowAny]
+    return super().get_permissions()
+  
+  def create(self, request, *args, **kwargs):
+    serialized = self.get_serializer(data=request.data)
+    serialized.is_valid(raise_exception=True)
+    user = serialized.save()
+
+    #Generate token
+    refresh = RefreshToken.for_user(user)
+    access_token = str(refresh.access_token)
+    refresh_token = str(refresh)
+
+    response_data = serialized.data
+    response_data.update({
+      "access": access_token,
+      "refresh": refresh_token
+    })
+
+    header = self.get_success_headers(serialized.data)
+    return Response(response_data, status=status.HTTP_201_CREATED)
+
+
 
 class CustomTokenPairView(TokenObtainPairView):
   serializer_class = CustomTokenPairSerializer

@@ -1,0 +1,204 @@
+{
+	"info": {
+		"_postman_id": "d6aad512-e8b7-4abc-9d9b-3be9d4e51857",
+		"name": "messaging_app",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36965059",
+		"_collection_link": "https://work00-5994.postman.co/workspace/49a49c8d-40b8-4bfa-9089-dedb4637ce22/collection/36965059-d6aad512-e8b7-4abc-9d9b-3be9d4e51857?action=share&source=collection_link&creator=36965059"
+	},
+	"item": [
+		{
+			"name": "signUp",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"Alico\",\r\n    \"role\": \"guest\",\r\n    \"password\": \"test1234\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}}api/users/",
+					"host": [
+						"{{URL}}}api"
+					],
+					"path": [
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"jwt\", \"Bearer \" + pm.response.json().accesstoken);"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n  \"email\": \"john.tenant@example.com\",\r\n  \"password\": \"TenantPass123!\",\r\n  \"firstName\": \"John\",\r\n  \"lastName\": \"Doe\",\r\n  \"phoneNumber\": \"+2347012345678\",\r\n  \"role\": \"tenant\",\r\n  \"stateOfResidence\": \"Lagos\",\r\n  \"localGovernmentArea\": \"Ikeja\",\r\n  \"dateOfBirth\": \"1990-05-15\",\r\n  \"termsAccepted\": true\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/users/",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"users",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"jwt\", pm.response.json().accesstoken);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"china_baby@gmail.com\",\r\n    \"password\": \"test1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}api/login/",
+					"host": [
+						"{{URL}}api"
+					],
+					"path": [
+						"login",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "view messages",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sender\": \"fdafb432-d702-4932-bcb8-c09e904b782f\",\r\n    \"message_body\": \"Hello Buddy\",\r\n    \"conversation\": \"ed6f6c53-3f2a-496f-9c3b-9fe7f963b219\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}api/messages/c4b4f56b-c1f9-488c-89ab-e80ff127e104/",
+					"host": [
+						"{{URL}}api"
+					],
+					"path": [
+						"messages",
+						"c4b4f56b-c1f9-488c-89ab-e80ff127e104",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "post conversation",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{jwt}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"participants\": [\"fdafb432-d702-4932-bcb8-c09e904b782f\",\"4e0edb88-a963-406e-a5c5-004187d7f8f0\" ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}api/conversations/",
+					"host": [
+						"{{URL}}api"
+					],
+					"path": [
+						"conversations",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
