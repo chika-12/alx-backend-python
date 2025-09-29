@@ -156,3 +156,19 @@ SIMPLE_JWT = {
     "USER_ID_FIELD": "user_id",  
     "USER_ID_CLAIM": "user_id",   
 }
+
+LOGGING = {
+    "version": 1,
+    "handlers": {
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": "requests.log",
+        },
+    },
+    "loggers": {
+        "request_logger": {
+            "handlers": ["file"],
+            "level": "INFO",
+        },
+    },
+}
