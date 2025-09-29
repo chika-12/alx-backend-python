@@ -8,12 +8,14 @@ from .auth import CustomTokenPairSerializer
 from .permissions import IsParticipantOfConversation
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from .filters import MessageFilter
 
 
 class MessageViewSet(viewsets.ModelViewSet):
   queryset = Message.objects.all()
   serializer_class = MessageSerializer
   permission_classes = [IsAuthenticated, IsParticipantOfConversation ]
+  filterset_class  = MessageFilter 
   def get_queryset(self):
     conversation_id = self.kwargs.get('conversation_id')
     return Message.objects.filter(conversation__participants=self.request.user)
