@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-logger = logging.getLogger('request_logger')
+logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 if not logger.handlers:
@@ -8,6 +8,7 @@ if not logger.handlers:
   formatter = logging.Formatter("%(message)s")
   file_handler.setFormatter(formatter)
   logger.addHandler(file_handler)
+
 
 class RequestLoggingMiddleware:
   def __init__(self, get_response):
