@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Conversation, Message
+from .models import User, Conversation, Message, Profile
 
 
 # -------------------------------
@@ -30,8 +30,9 @@ class UserSerializer(serializers.ModelSerializer):
 # -------------------------------
 # Message Serializer
 # -------------------------------
+
 class MessageSerializer(serializers.ModelSerializer):
-    sender_name = serializers.SerializerMethodField()  # dynamic field
+    sender_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
@@ -43,6 +44,7 @@ class MessageSerializer(serializers.ModelSerializer):
 # -------------------------------
 # Conversation Serializer
 # -------------------------------
+
 class ConversationSerializer(serializers.ModelSerializer):
     participants = serializers.PrimaryKeyRelatedField(many=True, queryset=User.objects.all())
     messages = MessageSerializer(many=True, read_only=True)
@@ -56,3 +58,9 @@ class ConversationSerializer(serializers.ModelSerializer):
         return obj.messages.count()
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    class Meta:
+        model = Profile
+        fields = ["id", "user", "bio"]
+        read_only_fields = ["user"]

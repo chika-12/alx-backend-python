@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets, status, filters
-from .models import Message, User, Conversation
-from .serializers import MessageSerializer, ConversationSerializer, UserSerializer
+from .models import Message, User, Conversation, Profile
+from .serializers import MessageSerializer, ConversationSerializer, UserSerializer, ProfileSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .auth import CustomTokenPairSerializer
@@ -55,7 +55,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
   def get_permissions(self):
     if self.action == 'create':
-      return [AllowAny]
+      return [AllowAny()]
     return super().get_permissions()
   
   def create(self, request, *args, **kwargs):
@@ -77,6 +77,16 @@ class UserViewSet(viewsets.ModelViewSet):
     header = self.get_success_headers(serialized.data)
     return Response(response_data, status=status.HTTP_201_CREATED)
 
+class ProfileViewSet(viewsets.ModelViewSet):
+  queryset = Profile.objects.all()
+  serializer_class = ProfileSerializer
+  permission_classes = [IsAuthenticated]
+
+  def perform_create(self, serializer):
+    serializer.save(user=self.request.user)
+  
+  def query_user(self):
+    return Profile.objects.filter(user=self.request.user)
 
 
 class CustomTokenPairView(TokenObtainPairView):
