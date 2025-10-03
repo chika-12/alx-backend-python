@@ -5,7 +5,7 @@
 # messaging_app/models.py
 import uuid
 from django.db import models
-from django.conf import settings
+#from django.conf import settings
 from chats.models import User
 
 class Message(models.Model):
