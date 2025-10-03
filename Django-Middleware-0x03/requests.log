@@ -132,3 +132,8 @@
 2025-10-03 13:31:28.544344 - User: bob@example.com - Path: /api/messages/
 2025-10-03 13:31:30.141658 - User: bob@example.com - Path: /api/messages/
 2025-10-03 13:31:44.013086 - User: bob@example.com - Path: /api/conversations/
+2025-10-03 13:53:13.928360 - User: Anonymous - Path: /api/login/
+2025-10-03 13:55:42.761532 - User: Anonymous - Path: /api/login/
+2025-10-03 14:05:07.559321 - User: Anonymous - Path: /api/login/
+2025-10-03 14:08:06.519764 - User: Anonymous - Path: /api/login/
+2025-10-03 14:21:18.217538 - User: Anonymous - Path: /api/login/

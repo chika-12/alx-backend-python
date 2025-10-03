@@ -6,6 +6,8 @@ import time
 import logging
 from datetime import datetime
 from django.core.cache import cache
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import AuthenticationFailed
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -16,7 +18,7 @@ if not logger.handlers:
   file_handler.setFormatter(formatter)
   logger.addHandler(file_handler)
 
-
+# 1
 class RequestLoggingMiddleware:
   def __init__(self, get_response):
     self.get_response = get_response
@@ -30,6 +32,7 @@ class RequestLoggingMiddleware:
     logger.info(logg_message)
     return response
 
+#2
 class RestrictAccessByTimeMiddleware:
   def __init__(self, get_response):
     self.get_response = get_response
@@ -47,6 +50,7 @@ class RestrictAccessByTimeMiddleware:
     response = self.get_response(request)
     return(response)
 
+#3
 class OffensiveLanguageMiddleware:
   """For rate limiting. Limiting the number of
       messages for per minute"""
@@ -62,11 +66,6 @@ class OffensiveLanguageMiddleware:
       now = time.time()
       key = f"rate_limit:{ip}"
       timestamps = cache.get(key, [])
-
-      # if ip not in self.request_ip_address:
-      #   self.request_ip_address[ip] = []
-      #self.request_ip_address[ip] 
-
       timestamps = [ts for ts in timestamps if now - ts < 60]
 
       if len(timestamps) >= 5:
@@ -78,10 +77,7 @@ class OffensiveLanguageMiddleware:
       cache.set(key, timestamps, timeout=60)
 
     return self.get_response(request)
-
-      
-
-
+  
   def ip_address_extractor(self, request):
     """IP address extractor"""
 
@@ -94,3 +90,28 @@ class OffensiveLanguageMiddleware:
 
       ip = request.META.get("REMOTE_ADDR")
     return ip
+
+class RolepermissionMiddleware:
+  def __init__(self, get_response):
+    self.get_response = get_response
+    self.jwt_authenticator = JWTAuthentication()
+    self.role = ["admin", "moderator"]
+  def __call__(self, request):
+    if request.method == "GET" and request.path.startswith("/api/users/"):
+
+      if not request.user.is_authenticated:
+        try:
+          auth_result = self.jwt_authenticator.authenticate(request)
+          if auth_result is not None:
+           user, token = auth_result
+           request.user = user  # attach user to request
+        except AuthenticationFailed:
+          data = {"details": "Authentication required"}
+          json_data = JSONRenderer().render(data)
+          return HttpResponse(json_data, content_type="application/json", status=status.HTTP_401_UNAUTHORIZED)
+      
+      if request.user.role not in self.role:
+        data = {"details": "You don't have permission to perform this action"}
+        json_data = JSONRenderer().render(data)
+        return HttpResponse(json_data, content_type="application/json", status=status.HTTP_403_FORBIDDEN)
+    return self.get_response(request)
