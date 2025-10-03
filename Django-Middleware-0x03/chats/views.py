@@ -10,6 +10,8 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from .filters import MessageFilter
 from .pagination import MessagePagination
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 
@@ -76,16 +78,20 @@ class UserViewSet(viewsets.ModelViewSet):
     return Response(response_data, status=status.HTTP_201_CREATED)
 
 class ProfileViewSet(viewsets.ModelViewSet):
-  queryset = Profile.objects.all()
   serializer_class = ProfileSerializer
   permission_classes = [IsAuthenticated]
-
-  def perform_create(self, serializer):
-    serializer.save(user=self.request.user)
-  
-  def query_user(self):
+  def get_queryset(self):
+    # Only return the profile for the logged-in user
     return Profile.objects.filter(user=self.request.user)
+  def perform_create(self, serializer):
+    # Always attach profile to logged-in user
+    serializer.save(user=self.request.user)
 
 
 class CustomTokenPairView(TokenObtainPairView):
   serializer_class = CustomTokenPairSerializer
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+  if created:
+    Profile.objects.create(user=instance)

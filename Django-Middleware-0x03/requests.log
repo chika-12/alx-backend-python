@@ -137,3 +137,17 @@
 2025-10-03 14:05:07.559321 - User: Anonymous - Path: /api/login/
 2025-10-03 14:08:06.519764 - User: Anonymous - Path: /api/login/
 2025-10-03 14:21:18.217538 - User: Anonymous - Path: /api/login/
+2025-10-03 14:39:56.716844 - User: Anonymous - Path: /api/login/
+2025-10-03 14:46:33.788237 - User: Anonymous - Path: /api/users/
+2025-10-03 14:47:18.483137 - User: Anonymous - Path: /api/login/
+2025-10-03 14:47:23.571779 - User: chikamark@example.com - Path: /api/users/
+2025-10-03 14:47:39.702021 - User: chikamark@example.com - Path: /api/messages/
+2025-10-03 14:48:07.364913 - User: chikamark@example.com - Path: /api/messages/
+2025-10-03 14:48:10.351803 - User: chikamark@example.com - Path: /api/messages/
+2025-10-03 14:48:17.933444 - User: chikamark@example.com - Path: /api/profile/
+2025-10-03 14:48:53.723603 - User: chikamark@example.com - Path: /api/conversations/
+2025-10-03 14:48:58.205288 - User: chikamark@example.com - Path: /api/conversations/
+2025-10-03 14:49:00.085661 - User: chikamark@example.com - Path: /api/conversations/
+2025-10-03 14:49:16.321334 - User: chikamark@example.com - Path: /api/profile/
+2025-10-03 14:57:49.497588 - User: Anonymous - Path: /api/login/
+2025-10-03 14:58:02.149204 - User: chikamark@example.com - Path: /api/profile/
