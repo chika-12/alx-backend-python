@@ -33,20 +33,18 @@ class ConversationViewSet(viewsets.ModelViewSet):
 
 
   def get_queryset(self):
-    conversation_id = self.kwargs.get('conversation_id')
-    return Message.objects.filter(conversation_id=conversation_id, conversation__participants=self.request.user)
+    return Conversation.objects.filter(participants=self.request.user)
   
   def create(self, request, *args, **kwargs):
-    conversation_id = self.kwargs.get('conversation_id')
-    conversation = Conversation.objects.get('conversation_id=conversation_id')
+    participant_id = request.data.get("participants", [])
 
-    if request.user not in conversation.participants.all():
-      return Response({"detail": "Forbidedn"}, status=status.HTTP_403_FORBIDDEN)
-    serializer = self.get_serializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save(sender=request.user, conversation=conversation)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
-  
+    if request.user.user_id not in participant_id:
+      participant_id.append(request.user.user_id)
+
+    conversation = Conversation.objects.create()
+    conversation.participants.set(User.objects.filter(user_id__in=participant_id))
+    serializer = self.get_serializer(conversation)
+    return Response(serializer.data, status=status.HTTP_201_CREATED) 
 
 class UserViewSet(viewsets.ModelViewSet):
   queryset = User.objects.all()
