@@ -6,18 +6,21 @@
 import uuid
 from django.db import models
 from django.conf import settings
-#from chats.models import User
-User = settings.AUTH_USER_MODEL
+from chats.models import User
+#User = settings.AUTH_USER_MODEL
 
 class Message(models.Model):
   id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
   sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messaging_sent_messages")
   receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messaging_received_messages")
+  parent_message = models.ForeignKey("self", on_delete=models.CASCADE, null=True, blank=True, related_name="replies")
   content = models.TextField()
   edited = models.BooleanField(default=False)
   timestamp = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
+    if self.parent_message:
+      return f"Reply by {self.sender} to message {self.parent_message.id}"
     return f"Message from {self.sender} to {self.receiver}"
 
 # messaging_app/models.py

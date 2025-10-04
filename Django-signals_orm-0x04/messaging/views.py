@@ -1,13 +1,13 @@
 from django.shortcuts import render
 
 # Create your views here.
-from .serializers import MessageHistorySerializers
+from .serializers import MessageHistorySerializers, MessageSerializer
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import MessageHistory
+from .models import MessageHistory, Message
 from chats.models import User
-from chats.serializers import UserSerializer
+#from chats.serializers import UserSerializer
 from rest_framework.decorators import api_view, permission_classes
 
 class MessageHistoryViewsets(viewsets.ReadOnlyModelViewSet):
@@ -23,3 +23,14 @@ def delete_user(request):
   user.delete()
   return Response({"message": "Your account has been successfully deactivated."},
         status=status.HTTP_204_NO_CONTENT)
+
+class MessageViewSet(viewsets.ModelViewSet):
+  serializer_class = MessageSerializer
+
+  def get_queryset(self):
+    return (
+      Message.objects
+      .select_related("sender", "receiver", "parent_message")
+      .prefetch_related("replies") 
+      .order_by("-timestamp")
+    )
