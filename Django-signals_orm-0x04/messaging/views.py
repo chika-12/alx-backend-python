@@ -15,7 +15,7 @@ class MessageHistoryViewsets(viewsets.ReadOnlyModelViewSet):
     message_id = self.kwargs.get("id")
     return MessageHistory.objects.filter(id=message_id).order_by("-edited_at")
   
-class deleteUser(viewsets.ModelViewSet):
+class Delete_User(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
   permission_classes = [IsAuthenticated]
