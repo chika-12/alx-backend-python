@@ -9,6 +9,7 @@ from .models import MessageHistory, Message
 from chats.models import User
 #from chats.serializers import UserSerializer
 from rest_framework.decorators import api_view, permission_classes
+from utils import get_replies_recursive
 
 class MessageHistoryViewsets(viewsets.ReadOnlyModelViewSet):
   serializer_class = MessageHistorySerializers
@@ -34,3 +35,14 @@ class MessageViewSet(viewsets.ModelViewSet):
       .prefetch_related("replies") 
       .order_by("-timestamp")
     )
+
+@api_view(["GET"])
+def message_thread(request, message_id):
+  message = Message.objects.select_related('sender', 'reciever').get(id=message_id)
+  data = {
+    'id' :message.id,
+    'content': message.content,
+    'sender' :message.sender.username,
+    'replies' :get_replies_recursive(message)
+  }
+  return Response(data)
