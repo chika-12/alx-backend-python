@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from .models import MessageHistory
 from chats.models import User
 from chats.serializers import UserSerializer
+from rest_framework.decorators import api_view, permission_classes
 
 class MessageHistoryViewsets(viewsets.ReadOnlyModelViewSet):
   serializer_class = MessageHistorySerializers
@@ -15,15 +16,10 @@ class MessageHistoryViewsets(viewsets.ReadOnlyModelViewSet):
     message_id = self.kwargs.get("id")
     return MessageHistory.objects.filter(id=message_id).order_by("-edited_at")
   
-class Delete_user(viewsets.ModelViewSet):
-  queryset = User.objects.all()
-  serializer_class = UserSerializer
-  permission_classes = [IsAuthenticated]
-
-  def destroy(self, request):
-    user = self.get_object()
-    if request.user != user:
-      return Response({"error": "You can not delete this account"}, status=status.HTTP_403_FORBIDDEN)
-    
-    user.delete()
-    return Response({"error": "Your account has been successfully deactivated"}, status=status.HTTP_204_NO_CONTENT)
+@api_view('DELETE')
+@permission_classes(IsAuthenticated)
+def delete_user(request):
+  user = request.user
+  user.delete()
+  return Response({"message": "Your account has been successfully deactivated."},
+        status=status.HTTP_204_NO_CONTENT)
