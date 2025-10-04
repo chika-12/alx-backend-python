@@ -15,7 +15,7 @@ class MessageHistoryViewsets(viewsets.ReadOnlyModelViewSet):
     message_id = self.kwargs.get("id")
     return MessageHistory.objects.filter(id=message_id).order_by("-edited_at")
   
-class Delete_User(viewsets.ModelViewSet):
+class Delete_user(viewsets.ModelViewSet):
   queryset = User.objects.all()
   serializer_class = UserSerializer
   permission_classes = [IsAuthenticated]
@@ -25,5 +25,5 @@ class Delete_User(viewsets.ModelViewSet):
     if request.user != user:
       return Response({"error": "You can not delete this account"}, status=status.HTTP_403_FORBIDDEN)
     
-    user.soft_delete()
+    user.delete()
     return Response({"error": "Your account has been successfully deactivated"}, status=status.HTTP_204_NO_CONTENT)
