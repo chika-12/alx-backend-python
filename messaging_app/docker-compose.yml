@@ -11,16 +11,27 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    environment:
+      # Django will use these to connect to MySQL
+      MYSQL_DATABASE: messaging_db
+      MYSQL_USER: chika
+      MYSQL_PASSWORD: secret123
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
 
   db:
-    image: postgres:15
+    image: mysql:8
     container_name: messaging_db
+    restart: always
     environment:
-      POSTGRES_DB: messaging_db
-      POSTGRES_USER: chika
-      POSTGRES_PASSWORD: secret123
+      MYSQL_DATABASE: messaging_db
+      MYSQL_USER: chika
+      MYSQL_PASSWORD: secret123
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - mysql_data:/var/lib/mysql
 
 volumes:
-  postgres_data:
+  mysql_data:
