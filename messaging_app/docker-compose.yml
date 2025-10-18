@@ -13,7 +13,7 @@ services:
       - db
     environment:
       # Django will use these to connect to MySQL
-      MYSQL_DATABASE: messaging_db
+      MYSQL_DB: messaging_db
       MYSQL_USER: chika
       MYSQL_PASSWORD: secret123
       MYSQL_HOST: db
